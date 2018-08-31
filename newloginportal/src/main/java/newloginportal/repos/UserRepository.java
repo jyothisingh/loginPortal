@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import newloginportal.model.Authority;
+import newloginportal.model.EncryptedPass;
 import newloginportal.model.User;
 
 //public class UserRepository 
@@ -37,6 +38,7 @@ public class UserRepository  {
 	static final String PASS = "root";
 
 	public int findAllUsers(String enteredUserId,String enteredPassword) {
+		
 		Connection conn = null;
 		Statement stmt = null;
 		List<User> users = new ArrayList<User>();
@@ -66,12 +68,13 @@ public class UserRepository  {
 				String password = rs.getString("password");
 				int enabled = rs.getInt("enabled");
 				
+				
 				User retrievedUser = new User(userId, username, password,enabled);
 				users.add(retrievedUser );
 				
 				if  (userId.equals(enteredUserId)){
 					userPresence = true;
-					if(password.equals(enteredPassword))
+					if( new EncryptedPass().checkPass(enteredPassword, password))
 						return 1;
 					else 
 						return 2;
@@ -102,6 +105,8 @@ public class UserRepository  {
 		
 	}
 	public void addUser(String userId,String username,String password,String authority){
+		
+		password = new EncryptedPass().hashPassword(password);
 		Connection conn = null;
 		//Statement stmt = null;
 		try {

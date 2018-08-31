@@ -28,8 +28,7 @@ public class UserLoginControl {
 	
 	
 	@RequestMapping(path="/portfolioX",method=RequestMethod.POST)
-	public String portfolioPage(Model model ,@RequestParam("userId") String userId,@RequestParam("password") String password){
-		
+	public String portfolioPage(Model model ,@RequestParam("userId") String userId,@RequestParam("password") String password){		
 		System.out.println("Controller code invoked..");
 		// fetch courses from db.. repo
 		int valid = new UserRepository().findAllUsers(userId,password);
